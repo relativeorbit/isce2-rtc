@@ -1,6 +1,5 @@
-
+# Run ISCE2 rtcApp for a single Sentinel1 GRD
 name: rtcApp
-description: Run ISCE2 rtcApp
 
 on:
   workflow_dispatch:

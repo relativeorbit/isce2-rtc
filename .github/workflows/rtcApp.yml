@@ -38,7 +38,7 @@ jobs:
       run: |
         GRD=${{ github.event.inputs.GRD }}
         SAT=S${GRD:2:1}
-        wget -q -nc https://datapool.asf.alaska.edu/GRD_HD/${SAT}/${GRD}.zip
+        wget --no-verbose -nc https://datapool.asf.alaska.edu/GRD_HD/${SAT}/${GRD}.zip
         rm ~/.netrc
 
     - name: Cache conda
@@ -73,7 +73,7 @@ jobs:
         INPUTGRD=${{ github.event.inputs.GRD }}
         INPUTEPSG=${{ github.event.inputs.EPSG }}
 
-        sed -e 's/GRD/'"${INPUTGRD}"'/g' -e 's/EPSG/'"${INPUTEPSG}"'/g' rtcApp.template > rtcApp.xml
+        sed -e 's/GRD/'"${INPUTGRD}"'.zip/g' -e 's/EPSG/'"${INPUTEPSG}"'/g' rtcApp.template > rtcApp.xml
         cat rtcApp.xml
 
         echo "ISCE_HOME=${ISCE_HOME}" >> $GITHUB_ENV

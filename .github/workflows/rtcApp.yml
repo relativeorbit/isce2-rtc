@@ -37,7 +37,7 @@ jobs:
     - name: Download GRD Frame
       run: |
         GRD=${{ github.event.inputs.GRD }}
-        SAT=${GRD:0:3}
+        SAT=S${GRD:2:1}
         wget -nc https://datapool.asf.alaska.edu/GRD_HD/${SAT}/${GRD}.zip
         rm ~/.netrc
 
@@ -74,6 +74,7 @@ jobs:
         INPUTEPSG=${{ github.event.inputs.EPSG }}
 
         sed -e 's/GRD/${INPUTGRD}/g' -e 's/EPSG/${INPUTEPSG}/g' rtcApp.template > rtcApp.xml
+        cat rtcApp.xml
 
         echo "ISCE_HOME=${ISCE_HOME}" >> $GITHUB_ENV
         echo "PATH=${PATH}" >> $GITHUB_ENV

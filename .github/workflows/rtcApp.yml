@@ -64,23 +64,27 @@ jobs:
       run: |
         conda list
 
-    - name: Configure ISCE2
+    - name: List conda packages
       run: |
-        ISCE_HOME=/usr/share/miniconda3/envs/isce2-rtc/lib/python3.9/site-packages/isce
-        PATH=$PATH:${ISCE_HOME}/bin:${ISCE_HOME}/applications
+        ls /usr/share/miniconda3/envs/isce2-rtc/lib/python3.9/site-packages/isce
 
-        INPUTGRD=${{ github.event.inputs.GRD }}
-        INPUTEPSG=${{ github.event.inputs.EPSG }}
-
-        sed -e 's/GRD/${INPUTGRD}/g' -e 's/EPSG/${INPUTEPSG}/g' rtcApp.template > rtcApp.xml
-
-        "ISCE_HOME=${ISCE_HOME}" >> $GITHUB_ENV
-        "PATH=${PATH}" >> $GITHUB_ENV
-
-    - name: Run rtcApp
-      run: |
-        rtcApp.py --steps
-
-    - name: Finish up
-      run: |
-        ls
+    # - name: Configure ISCE2
+    #   run: |
+    #     ISCE_HOME=/usr/share/miniconda3/envs/isce2-rtc/lib/python3.9/site-packages/isce
+    #     PATH=$PATH:${ISCE_HOME}/bin:${ISCE_HOME}/applications
+    #
+    #     INPUTGRD=${{ github.event.inputs.GRD }}
+    #     INPUTEPSG=${{ github.event.inputs.EPSG }}
+    #
+    #     sed -e 's/GRD/${INPUTGRD}/g' -e 's/EPSG/${INPUTEPSG}/g' rtcApp.template > rtcApp.xml
+    #
+    #     "ISCE_HOME=${ISCE_HOME}" >> $GITHUB_ENV
+    #     "PATH=${PATH}" >> $GITHUB_ENV
+    #
+    # - name: Run rtcApp
+    #   run: |
+    #     rtcApp.py --steps
+    #
+    # - name: Finish up
+    #   run: |
+    #     ls

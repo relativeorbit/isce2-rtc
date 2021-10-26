@@ -22,14 +22,14 @@ jobs:
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
-    - name: Configure NASA URS .netrc
+    - name: Configure NASA URS ~/.netrc
       env:
         # Warning: careful exposing secrets in scripts
         EARTHDATA_LOGIN: ${{ secrets.NASA_USERNAME }}
         EARTHDATA_PASSWORD: ${{ secrets.NASA_PASSWORD }}
       run: |
         echo "machine urs.earthdata.nasa.gov login $EARTHDATA_LOGIN password $EARTHDATA_PASSWORD" > ~/.netrc
-        chmod 0600 .netrc
+        chmod 0600 ~/.netrc
 
     - name: Download GRD Frame
       run: |

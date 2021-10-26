@@ -66,7 +66,7 @@ jobs:
 
     - name: Configure ISCE2
       run: |
-        ISCE_HOME=/usr/share/miniconda3/envs/lib/python3.9/site-packages/isce
+        ISCE_HOME=/usr/share/miniconda3/envs/isce2-rtc/lib/python3.9/site-packages/isce
         PATH=$PATH:${ISCE_HOME}/bin:${ISCE_HOME}/applications
 
         INPUTGRD=${{ github.event.inputs.GRD }}

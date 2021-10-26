@@ -1,0 +1,62 @@
+
+name: rtcApp
+description: Run ISCE2 rtcApp
+
+on:
+  workflow_dispatch:
+    inputs:
+      GRD:
+        description: Sentinel1 GRD from ASF https://search.asf.alaska.edu
+        default: S1B_IW_GRDH_1SDV_20200913T010946_20200913T011011_023350_02C58A_4A77
+
+jobs:
+  rtcApp:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+    - name: Configure NASA URS .netrc
+      env:
+        # Warning: careful exposing secrets in scripts
+        EARTHDATA_LOGIN: ${{ secrets.NASA_USERNAME }}
+        EARTHDATA_PASSWORD: ${{ secrets.NASA_PASSWORD }}
+      run: |
+        echo "machine urs.earthdata.nasa.gov login $EARTHDATA_LOGIN password $EARTHDATA_PASSWORD" > .netrc
+        chmod 0600 .netrc
+
+    - name: Download GRD Frame
+      run: |
+        GRD=${{ github.event.inputs.GRD }}
+        SAT=${GRD:5}
+        wget -nc https://datapool.asf.alaska.edu/GRD_HD/${SAT}/${GRD}.zip
+        rm ~/.netrc
+
+    - name: Cache conda
+      uses: actions/cache@v2
+      env:
+        # Increase this value to reset cache if environment.yml has not changed
+        CACHE_NUMBER: 0
+      with:
+        path: ~/conda_pkgs_dir
+        key:
+          ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('environment.yml') }}
+
+    - name: Setup Conda Environment
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        miniforge-version: latest
+        mamba-version: "*"
+        environment-file: environment.yml
+        use-only-tar-bz2: true
+
+    - name: List conda packages
+      run: |
+        conda list

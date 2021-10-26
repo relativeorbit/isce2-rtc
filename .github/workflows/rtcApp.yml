@@ -7,6 +7,9 @@ on:
       GRD:
         description: Sentinel1 GRD from ASF https://search.asf.alaska.edu
         default: S1B_IW_GRDH_1SDV_20200913T010946_20200913T011011_023350_02C58A_4A77
+      EPSG:
+        description: Output Projection EPSG Code
+        default: 32612
 
 jobs:
   rtcApp:
@@ -52,10 +55,32 @@ jobs:
       uses: conda-incubator/setup-miniconda@v2
       with:
         miniforge-version: latest
-        mamba-version: "*"
+        auto-update-conda: false
         environment-file: environment.yml
+        activate-environment: isce2-rtc
         use-only-tar-bz2: true
 
     - name: List conda packages
       run: |
         conda list
+
+    - name: Configure ISCE2
+      run: |
+        ISCE_HOME=/usr/share/miniconda3/envs/lib/python3.9/site-packages/isce
+        PATH=$PATH:${ISCE_HOME}/bin:${ISCE_HOME}/applications
+
+        INPUTGRD=${{ github.event.inputs.GRD }}
+        INPUTEPSG=${{ github.event.inputs.EPSG }}
+
+        sed -e 's/GRD/${INPUTGRD}/g' -e 's/EPSG/${INPUTEPSG}/g' rtcApp.template > rtcApp.xml
+
+        "ISCE_HOME=${ISCE_HOME}" >> $GITHUB_ENV
+        "PATH=${PATH}" >> $GITHUB_ENV
+
+    - name: Run rtcApp
+      run: |
+        rtcApp.py --steps
+
+    - name: Finish up
+      run: |
+        ls

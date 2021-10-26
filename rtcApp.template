@@ -1,0 +1,15 @@
+<rtcApp>
+    <component name="rtcApp">
+        <property name="sensor name">sentinel1</property>
+        <property name="posting">10</property>
+        <property name="polarizations">[VV, VH]</property>
+        <property name="epsg id">EPSG</property>
+        <property name="geocode spacing">20</property>
+        <property name="geocode bounding box">None</property>
+        <property name="geocode interpolation method">bilinear</property>
+        <property name="apply thermal noise correction">True</property>
+        <component name="reference">
+        <property name="safe">GRD</property>
+        </component>
+    </component>
+</rtcApp>

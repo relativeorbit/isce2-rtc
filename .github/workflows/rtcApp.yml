@@ -28,7 +28,7 @@ jobs:
         EARTHDATA_LOGIN: ${{ secrets.NASA_USERNAME }}
         EARTHDATA_PASSWORD: ${{ secrets.NASA_PASSWORD }}
       run: |
-        echo "machine urs.earthdata.nasa.gov login $EARTHDATA_LOGIN password $EARTHDATA_PASSWORD" > .netrc
+        echo "machine urs.earthdata.nasa.gov login $EARTHDATA_LOGIN password $EARTHDATA_PASSWORD" > ~/.netrc
         chmod 0600 .netrc
 
     - name: Download GRD Frame

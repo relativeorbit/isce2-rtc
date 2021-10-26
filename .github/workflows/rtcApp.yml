@@ -34,7 +34,7 @@ jobs:
     - name: Download GRD Frame
       run: |
         GRD=${{ github.event.inputs.GRD }}
-        SAT=${GRD:5}
+        SAT=${GRD:0:3}
         wget -nc https://datapool.asf.alaska.edu/GRD_HD/${SAT}/${GRD}.zip
         rm ~/.netrc
 

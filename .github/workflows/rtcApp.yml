@@ -74,8 +74,8 @@ jobs:
         PATH="${PATH}:${ISCE_HOME}/bin:${ISCE_HOME}/applications"
 
         # Need absolute path to GRD
-        INPUT_GRD="${PWD}/${INPUT_GRD}"
-        sed -e 's/GRD/'"${INPUT_GRD}"'.zip/g' -e 's/EPSG/'"${INPUT_EPSG}"'/g' rtcApp.template > rtcApp.xml
+        INPUT_ZIP="${PWD}/${INPUT_GRD}.zip"
+        sed -e 's,GRD,'"${INPUT_ZIP}"',g' -e 's,EPSG,'"${INPUT_EPSG}"',g' rtcApp.template > rtcApp.xml
         cat rtcApp.xml
         ls
 

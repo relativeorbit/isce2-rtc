@@ -39,6 +39,7 @@ jobs:
         GRD=${{ github.event.inputs.GRD }}
         SAT=S${GRD:2:1}
         wget --no-verbose -nc https://datapool.asf.alaska.edu/GRD_HD/${SAT}/${GRD}.zip
+        ./fetchOrbit.py ${GRD}.zip
         rm ~/.netrc
 
     - name: Cache conda
@@ -70,18 +71,20 @@ jobs:
         ISCE_HOME="/usr/share/miniconda3/envs/isce2-rtc/lib/python3.9/site-packages/isce"
         PATH="${PATH}:${ISCE_HOME}/bin:${ISCE_HOME}/applications"
 
-        INPUTGRD=${{ github.event.inputs.GRD }}
+        # Need absolute path to GRD
+        INPUTGRD=$PWD/${{ github.event.inputs.GRD }}
         INPUTEPSG=${{ github.event.inputs.EPSG }}
 
         sed -e 's/GRD/'"${INPUTGRD}"'.zip/g' -e 's/EPSG/'"${INPUTEPSG}"'/g' rtcApp.template > rtcApp.xml
         cat rtcApp.xml
+        ls
 
         echo "ISCE_HOME=${ISCE_HOME}" >> $GITHUB_ENV
         echo "PATH=${PATH}" >> $GITHUB_ENV
 
     - name: Run rtcApp
       run: |
-        rtcApp.py --steps
+        rtcApp.py --steps --help
 
     - name: Finish up
       run: |

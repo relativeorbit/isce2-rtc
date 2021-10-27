@@ -72,7 +72,7 @@ jobs:
         PATH="${PATH}:${ISCE_HOME}/bin:${ISCE_HOME}/applications"
 
         # Need absolute path to GRD
-        INPUTGRD=$PWD/${{ github.event.inputs.GRD }}
+        INPUTGRD=${PWD}/${{ github.event.inputs.GRD }}
         INPUTEPSG=${{ github.event.inputs.EPSG }}
 
         sed -e 's/GRD/'"${INPUTGRD}"'.zip/g' -e 's/EPSG/'"${INPUTEPSG}"'/g' rtcApp.template > rtcApp.xml

@@ -41,7 +41,7 @@ jobs:
       run: |
         SAT=S${INPUT_GRD:2:1}
         wget --no-verbose -nc https://datapool.asf.alaska.edu/GRD_HD/${SAT}/${INPUT_GRD}.zip
-        ./fetchOrbit.py ${GRD}.zip
+        ./fetchOrbit.py ${INPUT_GRD}.zip
         rm ~/.netrc
 
     - name: Cache conda

@@ -84,7 +84,7 @@ jobs:
 
     - name: Run rtcApp
       run: |
-        rtcApp.py --steps
+        rtcApp.py --steps --help
 
     - name: Finish up
       run: |

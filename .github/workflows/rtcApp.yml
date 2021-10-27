@@ -14,6 +14,9 @@ on:
 jobs:
   rtcApp:
     runs-on: ubuntu-20.04
+    env:
+      INPUT_GRD: ${{ github.event.inputs.GRD }}
+      INPUT_EPSG: ${{ github.event.inputs.EPSG }}
     defaults:
       run:
         shell: bash -l {0}
@@ -36,9 +39,8 @@ jobs:
 
     - name: Download GRD Frame
       run: |
-        GRD=${{ github.event.inputs.GRD }}
-        SAT=S${GRD:2:1}
-        wget --no-verbose -nc https://datapool.asf.alaska.edu/GRD_HD/${SAT}/${GRD}.zip
+        SAT=S${INPUT_GRD:2:1}
+        wget --no-verbose -nc https://datapool.asf.alaska.edu/GRD_HD/${SAT}/${INPUT_GRD}.zip
         ./fetchOrbit.py ${GRD}.zip
         rm ~/.netrc
 
@@ -72,10 +74,8 @@ jobs:
         PATH="${PATH}:${ISCE_HOME}/bin:${ISCE_HOME}/applications"
 
         # Need absolute path to GRD
-        INPUTGRD="${PWD}/${{ github.event.inputs.GRD }}"
-        INPUTEPSG=${{ github.event.inputs.EPSG }}
-
-        sed -e 's/GRD/'"${INPUTGRD}"'.zip/g' -e 's/EPSG/'"${INPUTEPSG}"'/g' rtcApp.template > rtcApp.xml
+        INPUT_GRD="${PWD}/${INPUT_GRD}"
+        sed -e 's/GRD/'"${INPUT_GRD}"'.zip/g' -e 's/EPSG/'"${INPUT_EPSG}"'/g' rtcApp.template > rtcApp.xml
         cat rtcApp.xml
         ls
 

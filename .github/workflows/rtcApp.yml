@@ -37,13 +37,6 @@ jobs:
         echo "machine urs.earthdata.nasa.gov login $EARTHDATA_LOGIN password $EARTHDATA_PASSWORD" > ~/.netrc
         chmod 0600 ~/.netrc
 
-    - name: Download GRD Frame
-      run: |
-        SAT=S${INPUT_GRD:2:1}
-        wget --no-verbose -nc https://datapool.asf.alaska.edu/GRD_HD/${SAT}/${INPUT_GRD}.zip
-        ./fetchOrbit.py ${INPUT_GRD}.zip
-        rm ~/.netrc
-
     - name: Cache conda
       uses: actions/cache@v2
       env:
@@ -59,13 +52,20 @@ jobs:
       with:
         miniforge-version: latest
         auto-update-conda: false
-        environment-file: environment.yml
+        environment-file: conda-linux-64.lock
         activate-environment: isce2-rtc
         use-only-tar-bz2: true
 
     - name: List conda packages
       run: |
         conda list
+
+    - name: Download GRD Frame
+      run: |
+        SAT=S${INPUT_GRD:2:1}
+        wget --no-verbose -nc https://datapool.asf.alaska.edu/GRD_HD/${SAT}/${INPUT_GRD}.zip
+        ./fetchOrbit.py ${INPUT_GRD}.zip
+        rm ~/.netrc
 
     - name: Configure ISCE2
       run: |

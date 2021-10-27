@@ -45,7 +45,7 @@ jobs:
       with:
         path: ~/conda_pkgs_dir
         key:
-          ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('environment.yml') }}
+          ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('conda-linux-64.lock') }}
 
     - name: Setup Conda Environment
       uses: conda-incubator/setup-miniconda@v2
@@ -64,8 +64,7 @@ jobs:
       run: |
         SAT=S${INPUT_GRD:2:1}
         wget --no-verbose -nc https://datapool.asf.alaska.edu/GRD_HD/${SAT}/${INPUT_GRD}.zip
-        ./fetchOrbit.py ${INPUT_GRD}.zip
-        rm ~/.netrc
+        ./fetchOrbit.py -i ${INPUT_GRD}.zip
 
     - name: Configure ISCE2
       run: |
@@ -76,7 +75,6 @@ jobs:
         INPUT_ZIP="${PWD}/${INPUT_GRD}.zip"
         sed -e 's,GRD,'"${INPUT_ZIP}"',g' -e 's,EPSG,'"${INPUT_EPSG}"',g' rtcApp.template > rtcApp.xml
         cat rtcApp.xml
-        ls
 
         echo "ISCE_HOME=${ISCE_HOME}" >> $GITHUB_ENV
         echo "PATH=${PATH}" >> $GITHUB_ENV
@@ -92,6 +90,7 @@ jobs:
 
     - name: Finish up
       run: |
+        rm ~/.netrc
         tree
 
     - name: Save geocoded output

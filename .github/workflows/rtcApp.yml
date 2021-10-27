@@ -67,7 +67,6 @@ jobs:
       run: |
         conda list
 
-
     - name: Configure ISCE2
       run: |
         ISCE_HOME="/usr/share/miniconda3/envs/isce2-rtc/lib/python3.9/site-packages/isce"
@@ -82,10 +81,26 @@ jobs:
         echo "ISCE_HOME=${ISCE_HOME}" >> $GITHUB_ENV
         echo "PATH=${PATH}" >> $GITHUB_ENV
 
+    - name: Patch rtcApp
+      run: |
+        # https://github.com/isce-framework/isce2/pull/220
+        sed -i -e 's/args=(self.geocode_list, self.geocode_bbox))/)/' `which rtcApp.py`
+
     - name: Run rtcApp
       run: |
-        rtcApp.py --steps --help
+        rtcApp.py --steps
 
     - name: Finish up
       run: |
-        ls
+        tree
+
+    - name: Save geocoded output
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ github.event.inputs.GRD }}
+        path: |
+          isce.log
+          rtcProc.xml
+          rtcApp.xml
+          output/gamma_VV*

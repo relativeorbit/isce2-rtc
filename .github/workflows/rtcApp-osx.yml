@@ -88,12 +88,13 @@ jobs:
         echo "ISCE_HOME=${ISCE_HOME}" >> $GITHUB_ENV
         echo "PATH=${PATH}" >> $GITHUB_ENV
 
-    - name: Patch rtcApp
-      run: |
-        # https://github.com/isce-framework/isce2/pull/220
-        RTCAPP=`which rtcApp.py`
-        sed -i -e 's/args=(self.geocode_list, self.geocode_bbox))/)/' $RTCAPP
-
+    # - name: Patch rtcApp
+    #   run: |
+    #     # https://github.com/isce-framework/isce2/pull/220
+    #     RTCAPP=`which rtcApp.py`
+    #     echo ${RTCAPP}
+    #     sed -i -e 's/args=(self.geocode_list, self.geocode_bbox))/)/' {$RTCAPP}
+    #
     - name: Test rtcApp
       run: |
         rtcApp.py --steps --help

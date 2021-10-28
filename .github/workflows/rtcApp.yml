@@ -90,31 +90,31 @@ jobs:
 
     - name: rtcApp startup
       run: |
-        rtcApp.py --dostep startup
+        rtcApp.py --dostep=startup
 
     - name: rtcApp preprocess
       run: |
-        rtcApp.py --dostep preprocess
+        rtcApp.py --dostep=preprocess
 
     - name: rtcApp verifyDEM
       run: |
-        rtcApp.py --dostep verifyDEM
+        rtcApp.py --dostep=verifyDEM
 
     - name: rtcApp multilook
       run: |
-        rtcApp.py --dostep multilook
+        rtcApp.py --dostep=multilook
 
     - name: rtcApp topo
       run: |
-        rtcApp.py --dostep topo
+        rtcApp.py --dostep=topo
 
     - name: rtcApp normalize
       run: |
-        rtcApp.py --dostep normalize
+        rtcApp.py --dostep=normalize
 
     - name: rtcApp geocode
       run: |
-        rtcApp.py --dostep geocode
+        rtcApp.py --dostep=geocode
 
     - name: Finish up
       if: ${{ always() }}

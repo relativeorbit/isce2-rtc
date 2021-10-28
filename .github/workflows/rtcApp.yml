@@ -60,7 +60,7 @@ jobs:
       run: |
         conda list
 
-    - name: Download GRD Frame
+    - name: Download GRD and precise orbit
       run: |
         SAT=S${INPUT_GRD:2:1}
         wget --no-verbose -nc https://datapool.asf.alaska.edu/GRD_HD/${SAT}/${INPUT_GRD}.zip
@@ -84,9 +84,37 @@ jobs:
         # https://github.com/isce-framework/isce2/pull/220
         sed -i -e 's/args=(self.geocode_list, self.geocode_bbox))/)/' `which rtcApp.py`
 
-    - name: Run rtcApp
+    # - name: Run rtcApp
+    #   run: |
+    #     rtcApp.py --steps
+
+    - name: rtcApp startup
       run: |
-        rtcApp.py --steps --help
+        rtcApp.py --dostep startup
+
+    - name: rtcApp preprocess
+      run: |
+        rtcApp.py --dostep preprocess
+
+    - name: rtcApp verifyDEM
+      run: |
+        rtcApp.py --dostep verifyDEM
+
+    - name: rtcApp multilook
+      run: |
+        rtcApp.py --dostep multilook
+
+    - name: rtcApp topo
+      run: |
+        rtcApp.py --dostep topo
+
+    - name: rtcApp normalize
+      run: |
+        rtcApp.py --dostep normalize
+
+    - name: rtcApp geocode
+      run: |
+        rtcApp.py --dostep geocode
 
     - name: Finish up
       if: ${{ always() }}

@@ -77,39 +77,39 @@ jobs:
 
     - name: Configure ISCE2
       run: |
-        ISCE_HOME="/usr/share/miniconda3/envs/isce2-rtc/lib/python3.9/site-packages/isce"
-        PATH="${PATH}:${ISCE_HOME}/bin:${ISCE_HOME}/applications"
+        ISCE_HOME=${CONDA}/envs/isce2-rtc/lib/python3.9/site-packages/isce
+        PATH=${PATH}:${ISCE_HOME}/bin:${ISCE_HOME}/applications
 
         # Need absolute path to GRD
-        INPUT_ZIP="${PWD}/${INPUT_GRD}.zip"
+        INPUT_ZIP=${PWD}/${INPUT_GRD}.zip
         sed -e 's,GRD,'"${INPUT_ZIP}"',g' -e 's,EPSG,'"${INPUT_EPSG}"',g' rtcApp.template > rtcApp.xml
         cat rtcApp.xml
 
         echo "ISCE_HOME=${ISCE_HOME}" >> $GITHUB_ENV
         echo "PATH=${PATH}" >> $GITHUB_ENV
 
-    # - name: Patch rtcApp
-    #   run: |
-    #     # https://github.com/isce-framework/isce2/pull/220
-    #     RTCAPP=`which rtcApp.py`
-    #     echo ${RTCAPP}
-    #     sed -i -e 's/args=(self.geocode_list, self.geocode_bbox))/)/' {$RTCAPP}
-    #
-    - name: Test rtcApp
+    - name: Patch rtcApp
       run: |
-        rtcApp.py --steps --help
+        # https://github.com/isce-framework/isce2/pull/220
+        RTCAPP=`which rtcApp.py`
+        echo ${RTCAPP}
+        sed -i -e 's/args=(self.geocode_list, self.geocode_bbox))/)/' {$RTCAPP}
 
-    # - name: rtcApp startup
+    # - name: Test rtcApp
     #   run: |
-    #     rtcApp.py --dostep=startup
-    #
-    # - name: rtcApp preprocess
-    #   run: |
-    #     rtcApp.py --dostep=preprocess
-    #
-    # - name: rtcApp verifyDEM
-    #   run: |
-    #     rtcApp.py --dostep=verifyDEM
+    #     rtcApp.py --steps --help
+
+    - name: rtcApp startup
+      run: |
+        rtcApp.py --dostep=startup
+
+    - name: rtcApp preprocess
+      run: |
+        rtcApp.py --dostep=preprocess
+
+    - name: rtcApp verifyDEM
+      run: |
+        rtcApp.py --dostep=verifyDEM
     #
     # - name: rtcApp multilook
     #   run: |

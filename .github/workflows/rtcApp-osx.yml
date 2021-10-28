@@ -133,7 +133,6 @@ jobs:
         rm ~/.netrc
         du -sh *
         df -h
-        tree
 
     - name: Save geocoded output
       if: ${{ always() }}

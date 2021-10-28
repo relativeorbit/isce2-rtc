@@ -37,10 +37,19 @@ jobs:
         echo "machine urs.earthdata.nasa.gov login $EARTHDATA_LOGIN password $EARTHDATA_PASSWORD" > ~/.netrc
         chmod 0600 ~/.netrc
 
+    - name: DEM Cache
+      uses: actions/cache@v2
+      env:
+        # Increase this value to force re-creating SRTM DEM
+        CACHE_NUMBER: 0
+      with:
+        path: dem*wgs84*
+        key: dem-cache
+
     - name: Cache conda
       uses: actions/cache@v2
       env:
-        # Increase this value to reset cache if environment.yml has not changed
+        # Increase this value to reset cache if environment.yml/conda-linux-64.lock has not changed
         CACHE_NUMBER: 0
       with:
         path: ~/conda_pkgs_dir

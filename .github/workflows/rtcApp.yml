@@ -9,7 +9,7 @@ on:
         default: S1B_IW_GRDH_1SDV_20200913T010946_20200913T011011_023350_02C58A_4A77
       EPSG:
         description: Output Projection EPSG Code
-        default: 32612
+        default: 4326
 
 jobs:
   rtcApp:
@@ -86,11 +86,14 @@ jobs:
 
     - name: Run rtcApp
       run: |
-        rtcApp.py --steps
+        rtcApp.py --steps --help
 
     - name: Finish up
+      if: ${{ always() }}
       run: |
         rm ~/.netrc
+        du -sh *
+        df -h
         tree
 
     - name: Save geocoded output

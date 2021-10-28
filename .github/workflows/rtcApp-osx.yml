@@ -46,7 +46,7 @@ jobs:
       uses: actions/cache@v2
       env:
         # Increase this value to force re-creating SRTM DEM
-        CACHE_NUMBER: 0
+        CACHE_NUMBER: 1
       with:
         path: dem*wgs84*
         key: dem-cache
@@ -114,27 +114,28 @@ jobs:
     - name: rtcApp verifyDEM
       run: |
         rtcApp.py --dostep=verifyDEM
-    #
-    # - name: rtcApp multilook
-    #   run: |
-    #     rtcApp.py --dostep=multilook
-    #
-    # - name: rtcApp topo
-    #   run: |
-    #     rtcApp.py --dostep=topo
-    #
-    # - name: rtcApp normalize
-    #   run: |
-    #     rtcApp.py --dostep=normalize
-    #
-    # - name: rtcApp geocode
-    #   run: |
-    #     rtcApp.py --dostep=geocode
+
+    - name: rtcApp multilook
+      run: |
+        rtcApp.py --dostep=multilook
+
+    - name: rtcApp topo
+      run: |
+        rtcApp.py --dostep=topo
+
+    - name: rtcApp normalize
+      run: |
+        rtcApp.py --dostep=normalize
+
+    - name: rtcApp geocode
+      run: |
+        rtcApp.py --dostep=geocode
 
     - name: Finish up
       if: ${{ always() }}
       run: |
         rm ~/.netrc
+        df -h
         du -sh *
         ls -lh *
 

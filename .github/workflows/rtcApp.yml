@@ -26,8 +26,8 @@ jobs:
 
     - name: Report System Info
       run: |
-        lscpu -p
-        free -t -m
+        lscpu
+        free -t -m -h
         df -h
 
     - name: Get current date
@@ -100,7 +100,7 @@ jobs:
 
     - name: rtcApp startup
       run: |
-        free -t -m
+        free -t -m -h
         rtcApp.py --dostep=startup
 
     - name: rtcApp preprocess
@@ -125,7 +125,7 @@ jobs:
 
     - name: rtcApp geocode
       run: |
-        free -t -m
+        free -t -m -h
         psrecord "rtcApp.py --dostep=geocode" --log activity.txt --plot plot.png --interval 5
 
     - name: Finish up

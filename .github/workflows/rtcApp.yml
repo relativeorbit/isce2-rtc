@@ -24,6 +24,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Report System Info
+      run: |
+        lscpu -p
+        free -t -m
+        df -h
+
     - name: Get current date
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
@@ -36,15 +42,6 @@ jobs:
       run: |
         echo "machine urs.earthdata.nasa.gov login $EARTHDATA_LOGIN password $EARTHDATA_PASSWORD" > ~/.netrc
         chmod 0600 ~/.netrc
-
-    - name: DEM Cache
-      uses: actions/cache@v2
-      env:
-        # Increase this value to force re-creating SRTM DEM
-        CACHE_NUMBER: 0
-      with:
-        path: dem*wgs84*
-        key: dem-cache
 
     - name: Cache conda
       uses: actions/cache@v2
@@ -93,12 +90,17 @@ jobs:
         # https://github.com/isce-framework/isce2/pull/220
         sed -i -e 's/args=(self.geocode_list, self.geocode_bbox))/)/' `which rtcApp.py`
 
+    - name: Install psrecord
+      run: |
+        psrecord
+
     # - name: Run rtcApp
     #   run: |
     #     rtcApp.py --steps
 
     - name: rtcApp startup
       run: |
+        free -t -m
         rtcApp.py --dostep=startup
 
     - name: rtcApp preprocess
@@ -123,15 +125,16 @@ jobs:
 
     - name: rtcApp geocode
       run: |
-        rtcApp.py --dostep=geocode
+        free -t -m
+        psrecord "rtcApp.py --dostep=geocode" --log activity.txt --plot plot.png --interval 5
 
     - name: Finish up
       if: ${{ always() }}
       run: |
         rm ~/.netrc
         du -sh *
+        ls -lh *
         df -h
-        tree
 
     - name: Save geocoded output
       if: ${{ always() }}
@@ -142,4 +145,4 @@ jobs:
           isce.log
           rtcProc.xml
           rtcApp.xml
-          output/gamma_VV*
+          plot.png activity.txt

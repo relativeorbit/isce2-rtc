@@ -74,7 +74,7 @@ jobs:
 
     - name: Configure ISCE2
       run: |
-        ISCE_HOME="${CONDA}/miniconda3/envs/isce2-rtc/lib/python3.9/site-packages/isce"
+        ISCE_HOME="${CONDA}/envs/isce2-rtc/lib/python3.9/site-packages/isce"
         PATH="${PATH}:${ISCE_HOME}/bin:${ISCE_HOME}/applications"
 
         # Need absolute path to GRD

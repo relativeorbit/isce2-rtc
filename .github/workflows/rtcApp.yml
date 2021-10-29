@@ -92,7 +92,7 @@ jobs:
 
     - name: Install psrecord
       run: |
-        pip install -y psrecord
+        pip install psrecord
 
     # - name: Run rtcApp
     #   run: |

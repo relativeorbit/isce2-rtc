@@ -51,14 +51,14 @@ jobs:
       with:
         path: ~/conda_pkgs_dir
         key:
-          ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('conda-linux-64.lock') }}
+          ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('environment.yml') }}
 
     - name: Setup Conda Environment
       uses: conda-incubator/setup-miniconda@v2
       with:
         miniforge-version: latest
         auto-update-conda: false
-        environment-file: conda-linux-64.lock
+        environment-file: environment.yml
         activate-environment: isce2-rtc
         use-only-tar-bz2: true
 
@@ -74,7 +74,7 @@ jobs:
 
     - name: Configure ISCE2
       run: |
-        ISCE_HOME="/usr/share/miniconda3/envs/isce2-rtc/lib/python3.9/site-packages/isce"
+        ISCE_HOME="${CONDA}/miniconda3/envs/isce2-rtc/lib/python3.9/site-packages/isce"
         PATH="${PATH}:${ISCE_HOME}/bin:${ISCE_HOME}/applications"
 
         # Need absolute path to GRD
@@ -145,4 +145,5 @@ jobs:
           isce.log
           rtcProc.xml
           rtcApp.xml
-          plot.png activity.txt
+          plot.png
+          activity.txt
